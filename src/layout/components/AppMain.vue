@@ -1,6 +1,8 @@
 <template>
   <section class="app-main">
     <transition name="fade-transform" mode="out-in">
+      <!-- transition标签里面只能放标签、组件，不能解析文本 -->
+      <!-- <div>transition1234</div> -->
       <router-view :key="key" />
     </transition>
   </section>

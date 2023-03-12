@@ -1,5 +1,5 @@
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { login,getUserInfo } from '@/api/user'
+import { getToken, setToken, removeToken,setTimeStamp,getTimeStamp } from '@/utils/auth'
+import { login,getUserInfo,getUserDetailById } from '@/api/user'
 const state = {
   token:getToken(),
   // 问题：这里为什么定义空对象，为什么不定义null
@@ -23,19 +23,27 @@ const mutations = {
   }
 }
 
-
 const actions = {
   // 封装登录的actions
   async login(context,data){
     // 已在响应拦截器中解构过了数据
     const result = await login(data) // 拿到token
     context.commit('setToken',result) // 设置token
+    setTimeStamp() // 设置当前时间戳
   },
   async getUserInfo(context){
     const result = await getUserInfo()
-    context.commit('setUserInfo',result)
+    // 获取用户详情 用户的详情
+    const baseInfo = await getUserDetailById(result.userId)
+    const baseResult = {...result,...baseInfo}
+    context.commit('setUserInfo',baseResult)
     // 问题：这里为什么要返回 为后面埋下伏笔
     return result
+  },
+  // 登出操作
+  logout(context){
+    context.commit('removeToken')
+    context.commit('removeUserInfo')
   }
 }
 

@@ -6,7 +6,7 @@ import 'nprogress/nprogress.css' // 引入进度条样式
 
 const whiteList = ['/login','/404']
 // 前置路由
-router.beforeEach((to,from,next) => {
+router.beforeEach(async (to,from,next) => {
     console.log(to);
     // 开启进度条
     nprogress.start()
@@ -16,6 +16,10 @@ router.beforeEach((to,from,next) => {
             // 跳到主页
             next('/')
         } else {
+            // 获取用户资料
+            if (!store.getters.userId) {
+                await store.dispatch('user/getUserInfo')
+            }
             next()
         }
     }else{

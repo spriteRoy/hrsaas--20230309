@@ -15,8 +15,8 @@
      <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="@/assets/common/bigUserHeader.png" class="user-avatar">
-          <span class="name">管理员</span>
+          <img src="../../assets/common/head.jpg" class="user-avatar">
+          <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" style="color:#fff" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -41,14 +41,25 @@
 import { mapGetters } from "vuex";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
-
+import img from '@/assets/common/head.jpg'
+//     /static/img/head.b6c3427d.jpg
+console.log('img');
+console.log(img);
 export default {
+  data () {
+    return {
+      // ../../assets/common/head.jpg
+      defaultImg: require('@/assets/common/head.jpg'),
+      // defaultImg:'../../assets/common/head.jpg',
+      photo:'../../assets/common/head.jpg'
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar"]),
+    ...mapGetters(["sidebar","name","staffPhoto"]),
   },
   methods: {
     toggleSideBar() {
@@ -56,7 +67,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch("user/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      this.$router.push(`/login`);
     },
   },
 };
