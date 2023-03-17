@@ -7,7 +7,7 @@ import 'nprogress/nprogress.css' // 引入进度条样式
 const whiteList = ['/login','/404']
 // 前置路由
 router.beforeEach(async (to,from,next) => {
-    console.log(to);
+    // console.log(to);
     // 开启进度条
     nprogress.start()
     if (store.getters.token) {

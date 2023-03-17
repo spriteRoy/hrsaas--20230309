@@ -43,8 +43,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 import img from '@/assets/common/head.jpg'
 //     /static/img/head.b6c3427d.jpg
-console.log('img');
-console.log(img);
+// console.log('img');
+// console.log(img);
 export default {
   data () {
     return {

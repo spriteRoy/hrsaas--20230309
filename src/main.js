@@ -14,8 +14,6 @@ import router from './router'
 
 // 一次性导入所有自定义指令
 import * as directives from '@/directives/index'
-console.log('main.js');
-console.log(directives);
 Object.keys(directives).forEach(key => {
   Vue.directive(key,directives[key])
 })

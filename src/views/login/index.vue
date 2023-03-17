@@ -84,8 +84,6 @@ export default {
   name: "Login",
   data() {
     const validateMobile = (rule, value, callback) => {
-      console.log("rule");
-      console.log(rule);
       // 校验成功 callback()
       // 校验失败 callback(new Error("错误信息"))
       if (!validMobile(value)) {

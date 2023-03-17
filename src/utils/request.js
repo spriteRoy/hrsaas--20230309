@@ -36,12 +36,10 @@ service.interceptors.response.use(response => {
         return data
     }else{
         Message.error(message)
-        console.log(new Error(message));
         return Promise.reject(new Error(message))
     }
 },error =>{
     console.log(JSON.stringify(error));
-    console.error('123')
     Message.error(error.message)
     // 返回执行错误，让当前的执行链跳出成功，直接进入catch
     return Promise.reject(error)
