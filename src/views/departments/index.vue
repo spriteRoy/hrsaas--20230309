@@ -34,7 +34,8 @@
 
 <script>
 import treeTools from "./components/tree-tools";
-import { getDepartments } from '@/api/departments'
+import { getDepartments,delDepartments,addDepartments,getDepartDetail,updateDepartments } from '@/api/departments'
+import {tranListToTreeData} from '@/utils'
 export default {
   data() {
     return {
@@ -54,9 +55,8 @@ export default {
   methods: {
     async getDepartments(){
       const result = await getDepartments()
-      console.log(result);
       this.company = {name:result.companyName,manager:"负责人"}
-      this.departs = result.depts
+      this.departs = tranListToTreeData(result.depts,'')
     }
   }
 };
