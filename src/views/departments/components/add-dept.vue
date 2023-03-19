@@ -68,6 +68,8 @@ export default {
     // 检查部门名称是否重复
     const checkNameRepeat = async (rule, value, callback) => {
         const { depts } =  await getDepartments()
+        console.log(depts);
+        // debugger
         const isRepeat = depts.filter((item) => item.pid === this.treeNode.id).some(item => item.name === value)
         // 问题：callback是什么方法
         isRepeat ? callback(new Error(`同级部门下已经有${value}的部门了`)) : callback()
