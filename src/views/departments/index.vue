@@ -74,6 +74,7 @@ export default {
     // 监听tree-tools中触发的点击添加子部门的事件
     // node就是当前点击的部门
     addDepts(node){
+      
       this.showDialog = true
       this.node = node
     }

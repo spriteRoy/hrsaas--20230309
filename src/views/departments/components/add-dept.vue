@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible="showDialog">
+  <el-dialog title="新增部门" :visible="showDialog"  @close="btnCancel">
     <!-- 表单数据 -->
     <!-- 问题：
             1.为什么 model 属性前面不加冒号会报错
@@ -39,7 +39,7 @@
     <el-row slot="footer" type="flex" justify="center">
       <el-col :span="4.5">
         <div class="grid-content bg-purple-light">
-          <el-button size="small" class="grid-content bg-purple-dark"
+          <el-button size="small" class="grid-content bg-purple-dark" @click="btnCancel"
             >取消</el-button
           >
           <el-button size="small" type="primary" class="grid-content bg-purple" @click=" btnOK"
@@ -143,9 +143,16 @@ export default {
           // 将新增部门的id设置为操作节点的pid
           await addDepartments({...this.formData,pid:this.treeNode.id})
           this.$emit('addDepts')
+          // update:props名称
+          // 关闭dialog的时候会触发el-dialog的close事件，所以这里不需要再单独的重置表单数据了
           this.$emit('update:showDialog', false) //触发事件
         }
       })
+    },
+    btnCancel(){
+      this.$emit('update:showDialog', false) //触发事件
+      // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
+      this.$refs.deptForm.resetFields() // 重置校验字段
     }
   }
 };
