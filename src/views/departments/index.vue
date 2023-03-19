@@ -25,11 +25,11 @@
             </el-row>
           </el-col>
         </el-row> -->
-          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDepts" />
+          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDepts" @delDepts="getDepartments" />
         </el-tree>
       </el-card>
     </div>
-    <AddDept :showDialog="showDialog" :treeNode="node"></AddDept>
+    <AddDept :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"></AddDept>
   </div>
 </template>
 
@@ -68,8 +68,6 @@ export default {
     // async getDepartments(){
     //   const result = await getDepartments()
     //   const { depts } = result
-    //   console.log('depts');
-    //   console.log(depts);
     //   this.company = depts[0]
     //   this.departs = tranListToTreeData(result.depts,'')
     // },

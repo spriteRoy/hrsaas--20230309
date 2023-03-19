@@ -6,7 +6,7 @@
             https://blog.csdn.net/weixin_43413645/article/details/124280038
             2.为什么 rules 属性前面加冒号才生效
      -->
-    <el-form label-width="120px" :model="formData" :rules="rules">
+    <el-form  ref="deptForm" label-width="120px" :model="formData" :rules="rules">
       <el-form-item label="部门名称" prop="name">
         <el-input
           style="width: 80%"
@@ -42,7 +42,7 @@
           <el-button size="small" class="grid-content bg-purple-dark"
             >取消</el-button
           >
-          <el-button size="small" type="primary" class="grid-content bg-purple"
+          <el-button size="small" type="primary" class="grid-content bg-purple" @click=" btnOK"
             >确定</el-button
           >
         </div>
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { getDepartments } from '@/api/departments'
+import { getDepartments,addDepartments } from '@/api/departments'
 import {getEmployeeSimple} from '@/api/employees'
 export default {
   // 需要传入一个props变量来控制 显示或者隐藏
@@ -71,7 +71,6 @@ export default {
     // 检查部门名称是否重复
     const checkNameRepeat = async (rule, value, callback) => {
         const { depts } =  await getDepartments()
-        console.log(depts);
         // debugger
         const isRepeat = depts.filter((item) => item.pid === this.treeNode.id).some(item => item.name === value)
         // 问题：callback是什么方法
@@ -137,6 +136,16 @@ export default {
   methods: {
     async getEmployeeSimple(){
       this.peoples = await getEmployeeSimple()
+    },
+    btnOK(){
+      this.$refs.deptForm.validate(async isOk => {
+        if (isOk) {
+          // 将新增部门的id设置为操作节点的pid
+          await addDepartments({...this.formData,pid:this.treeNode.id})
+          this.$emit('addDepts')
+          this.$emit('update:showDialog', false) //触发事件
+        }
+      })
     }
   }
 };

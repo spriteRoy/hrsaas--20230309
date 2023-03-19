@@ -56,7 +56,8 @@ export default {
         }).then(() => {
           // 如果删除成功了，就会进入这里
           // 通过自定义事件抛出一个事件，让父组件监听这个事件
-          
+          this.$emit('delDepts') // 触发自定义事件
+          this.$message.success('删除部门成功')
         })
       }
     }
