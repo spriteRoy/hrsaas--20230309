@@ -19,7 +19,9 @@
         <el-input placeholder="1-50个字符" v-model="formData.code" />
       </el-form-item>
       <el-form-item label="部门负责人" prop="manager">
-        <el-select placeholder="请选择" v-model="formData.manager" />
+        <el-select placeholder="请选择" v-model="formData.manager" @focus="getEmployeeSimple">
+           <el-option v-for="item in peoples" :key="item.id" :label="item.username" :value="item.username" />
+        </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
         <!-- 将type设置为textarea，可设置rows属性 -->
@@ -51,6 +53,7 @@
 
 <script>
 import { getDepartments } from '@/api/departments'
+import {getEmployeeSimple} from '@/api/employees'
 export default {
   // 需要传入一个props变量来控制 显示或者隐藏
   props: {
@@ -128,10 +131,13 @@ export default {
           },
         ],
       },
+      peoples: [] // 接收获取的员工简单列表的数据
     };
   },
   methods: {
-    
+    async getEmployeeSimple(){
+      this.peoples = await getEmployeeSimple()
+    }
   }
 };
 </script>

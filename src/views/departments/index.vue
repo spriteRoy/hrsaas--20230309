@@ -68,6 +68,8 @@ export default {
     // async getDepartments(){
     //   const result = await getDepartments()
     //   const { depts } = result
+    //   console.log('depts');
+    //   console.log(depts);
     //   this.company = depts[0]
     //   this.departs = tranListToTreeData(result.depts,'')
     // },
