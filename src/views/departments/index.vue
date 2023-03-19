@@ -25,11 +25,11 @@
             </el-row>
           </el-col>
         </el-row> -->
-          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDepts" @delDepts="getDepartments" />
+          <treeTools slot-scope="{ data }" :tree-node="data" @addDepts="addDepts" @delDepts="getDepartments" @editDepts="editDepts" />
         </el-tree>
       </el-card>
     </div>
-    <AddDept :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"></AddDept>
+    <AddDept ref="addDept" :showDialog.sync="showDialog" :treeNode="node" @addDepts="getDepartments"></AddDept>
   </div>
 </template>
 
@@ -74,9 +74,13 @@ export default {
     // 监听tree-tools中触发的点击添加子部门的事件
     // node就是当前点击的部门
     addDepts(node){
-      
       this.showDialog = true
       this.node = node
+    },
+    editDepts(node){
+      this.showDialog = true
+      this.node = node  // 记录当前操作的节点
+      this.$refs.addDept.getDepartDetail(node.id)
     }
   }
 };

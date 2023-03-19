@@ -48,7 +48,7 @@ export default {
         this.$emit('addDepts',this.treeNode) // 触发自定义事件，告诉父组件显示弹层
       }else if (type === 'edit') {
         // 编辑部门的操作
-        
+        this.$emit('editDepts', this.treeNode)
       } else {
         // 删除操作
         this.$confirm('您确定删除该组织部门吗').then(() => {
