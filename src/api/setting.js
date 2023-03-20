@@ -36,7 +36,7 @@ export function getRoleDetail(id) {
   })
 }
 /** *
- *  读取角色详情
+ *  更新角色信息
  * ***/
 export function updateRole(data) {
   return request({
