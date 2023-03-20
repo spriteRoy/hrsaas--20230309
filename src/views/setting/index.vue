@@ -40,20 +40,24 @@
               type="info"
             >
             </el-alert>
+            <!-- 
+              并不是所有的表单都需要model rules prop, 只有在表单校验时才需要写
+
+            -->
             <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
-                <el-input disabled style="width: 400px" />
+                <el-input v-model="formData.name" disabled style="width: 400px" />
               </el-form-item>
               <el-form-item label="公司地址">
-                <el-input disabled style="width: 400px" />
+                <el-input  v-model="formData.companyAddress" disabled style="width: 400px" />
               </el-form-item>
               <el-form-item label="电话">
-                <el-input disabled style="width: 400px" />
+                <el-input  v-model="formData.companyPhone" disabled style="width: 400px" />
               </el-form-item>
               <el-form-item label="邮箱">
-                <el-input disabled style="width: 400px" />
+                <el-input v-model="formData.mailbox" disabled style="width: 400px" />
               </el-form-item>
-              <el-form-item label="备注">
+              <el-form-item v-model="formData.remarks" label="备注">
                 <el-input
                   type="textarea"
                   :rows="3"
@@ -70,8 +74,12 @@
 </template>
 
 <script>
-import { getRoleList } from "@/api/setting";
+import { getRoleList,getCompanyInfo } from "@/api/setting";
+import { mapGetters } from 'vuex'
 export default {
+  computed: {
+    ...mapGetters(['companyId'])
+  },
   data() {
     return {
       list: [], // 承接数组
@@ -81,10 +89,12 @@ export default {
         pagesize: 2,
         total: 0, // 记录总数
       },
+      formData:{}
     };
   },
   created() {
     this.getRoleList();
+    this.getCompanyInfo(this.companyId)
   },
   methods: {
     async getRoleList() {
@@ -95,6 +105,9 @@ export default {
     handleCurrentChange(newPage){
       this.page.page = newPage
       this.getRoleList(this.page)
+    },
+    async getCompanyInfo(companyId){
+      this.formData = await getCompanyInfo(companyId)
     }
   },
 };
