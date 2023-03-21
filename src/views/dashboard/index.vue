@@ -1,16 +1,19 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">name: {{ name }}</div>
-    <PageTools>
-      <span slot="before" :showBefore="true">想见你</span>
-      <el-button slot="after">导入excel</el-button>
+    <PageTools :showBefore="true" >
+      <span slot="before" >想见你</span>
+      <!-- <el-button slot="after">导入excel</el-button> -->
+      <template v-slot:after>
+        <el-button>导入</el-button>
+      </template>
     </PageTools>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import PageTools from '@/components/PageTools/index.vue'
+
 export default {
   name: 'Dashboard',
   computed: {
@@ -18,9 +21,7 @@ export default {
       'name'
     ])
   },
-  components: {
-    PageTools
-  }
+  
 }
 </script>
 

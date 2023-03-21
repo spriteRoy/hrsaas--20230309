@@ -9,11 +9,12 @@
         </el-col>
         <el-col>
             <el-row type="flex" justify="end">
+                <slot name="after" />
                 <!-- type="flex" justify="end"要写在el-row标签上 -->
                 <!-- 比较设置:span="5"和不设置:span="5"的区别 -->
-                <el-col :span="5">
+                <!-- <el-col :span="5">
                     <slot name="after" />
-                </el-col>
+                </el-col> -->
             </el-row>
         </el-col>
     </el-row>
@@ -25,7 +26,7 @@ export default {
     props:{
         showBefore:{
             type:Boolean,
-            default:true
+            default:false
         }
     }
 }

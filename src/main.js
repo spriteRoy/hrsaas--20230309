@@ -21,16 +21,10 @@ Object.keys(directives).forEach(key => {
 
 import '@/icons' // icon
 import '@/permission' // permission control
-
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
-
+import Component from '@/components/index'
+// 和ElementUI一样，在全局注册
+// Vue.use会调用对象里面的install方法
+Vue.use(Component)
 
 // set ElementUI lang to EN
 Vue.use(ElementUI, { locale })

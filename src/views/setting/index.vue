@@ -9,7 +9,7 @@
               <el-button
                 icon="el-icon-plus"
                 type="primary"
-                @click="showDialog = true"
+                @click="add"
                 >新增角色</el-button
               >
               <!-- <el-button
@@ -129,7 +129,7 @@
         <el-form-item label="角色名称" prop="name">
           <el-input v-model="roleForm.name" />
         </el-form-item>
-        <el-form-item label="角色描述">
+        <el-form-item label="角色描述" prop="description">
           <el-input v-model="roleForm.description" />
         </el-form-item>
       </el-form>
@@ -141,6 +141,7 @@
         </el-col>
       </el-row>
     </el-dialog>
+    {{ obj }}  ---{{ showObj }}
   </div>
 </template>
 
@@ -158,8 +159,12 @@ export default {
   computed: {
     ...mapGetters(["companyId"]),
     showTitle() {
+      console.log("计算属性------------"+this.roleForm.id);
       return this.roleForm.id ? "编辑角色" : "新增角色";
     },
+    showObj(){
+      return this.obj ? 'obj不为空' : 'obj为空'
+    }
   },
   data() {
     return {
@@ -176,16 +181,26 @@ export default {
       roleForm: {},
       rules: {
         name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" },
+          // { required: true, message: "角色名称不能为空", trigger: "blur" },
         ],
       },
+      obj:null
     };
   },
   created() {
+    this.obj = {
+      a:1
+    }
+    this.obj.b = 2
+    delete this.obj.a
     this.getRoleList();
     this.getCompanyInfo(this.companyId);
   },
   methods: {
+    add(){
+      this.showDialog = true
+      console.log("this.roleForm.id:"+this.roleForm.id);
+    },
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page);
       this.page.total = total;
@@ -213,7 +228,11 @@ export default {
     },
     async editRole(id) {
       // roleForm对象与表单双向绑定  而不是formData
+      console.log("编辑时 获取数据前 this.roleForm.id:"+this.roleForm.id);
+      console.log(this.roleForm);
       this.roleForm = await getRoleDetail(id); // 实现数据回写
+      console.log("编辑时 获取数据后 this.roleForm.id:"+this.roleForm.id);
+      console.log(this.roleForm);
       this.showDialog = true; // 为了不出现闪烁的问题 先获取数据 再弹出层
     },
     async btnOK() {
@@ -241,9 +260,12 @@ export default {
         name: "",
         description: "",
       };
+      // delete this.roleForm.id
       // 移除校验
       // resetFields只能重置表单上的数据
       this.$refs.roleForm.resetFields();
+      console.log('重置之后的数据');
+      console.log(this.roleForm);
       this.showDialog = false;
     },
   },
