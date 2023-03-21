@@ -12,6 +12,12 @@
                 @click="showDialog = true"
                 >新增角色</el-button
               >
+              <!-- <el-button
+                icon="el-icon-plus"
+                type="primary"
+                @click="showDialog = true"
+                >新增角色</el-button
+              > -->
             </el-row>
             <el-table border="" :data="list">
               <!-- 
@@ -69,7 +75,6 @@
             </el-alert>
             <!-- 
               并不是所有的表单都需要model rules prop, 只有在表单校验时才需要写
-
             -->
             <el-form label-width="120px" style="margin-top: 50px">
               <el-form-item label="企业名称">
@@ -114,7 +119,7 @@
       </el-card>
     </div>
     <!-- 放置编辑弹层 -->
-    <el-dialog title="编辑弹层" :visible="showDialog"  @close="btnCancel">
+    <el-dialog :title="showTitle" :visible="showDialog" @close="btnCancel">
       <el-form
         ref="roleForm"
         :model="roleForm"
@@ -152,6 +157,9 @@ import { mapGetters } from "vuex";
 export default {
   computed: {
     ...mapGetters(["companyId"]),
+    showTitle() {
+      return this.roleForm.id ? "编辑角色" : "新增角色";
+    },
   },
   data() {
     return {
@@ -162,8 +170,8 @@ export default {
         pagesize: 2,
         total: 0, // 记录总数
       },
-      formData: {},
       showDialog: false,
+      formData:{},
       // 专门接收新增或者编辑的编辑的表单数据
       roleForm: {},
       rules: {
@@ -204,6 +212,7 @@ export default {
         });
     },
     async editRole(id) {
+      // roleForm对象与表单双向绑定  而不是formData
       this.roleForm = await getRoleDetail(id); // 实现数据回写
       this.showDialog = true; // 为了不出现闪烁的问题 先获取数据 再弹出层
     },
@@ -227,14 +236,16 @@ export default {
       }
     },
     btnCancel() {
+      // 重置数据，因为resetFields只能重置表单上的数据，非表单上的数据，比如编辑中的id不能重置
       this.roleForm = {
-        name: '',
-        description: ''
-      }
+        name: "",
+        description: "",
+      };
       // 移除校验
-      this.$refs.roleForm.resetFields()
-      this.showDialog = false
-    }
+      // resetFields只能重置表单上的数据
+      this.$refs.roleForm.resetFields();
+      this.showDialog = false;
+    },
   },
 };
 </script>
