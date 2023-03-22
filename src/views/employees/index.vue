@@ -37,7 +37,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" >角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)"
                 >删除</el-button
               >
@@ -57,6 +57,8 @@
       </el-row>
     </div>
     <addEmployee :showDialog.sync="showDialog"></addEmployee>
+    <!-- 放置分配角色组件 -->
+    <AssignRole :showRoleDialog.sync="showRoleDialog" :userId="userId"></AssignRole>
   </div>
 </template>
 
@@ -65,6 +67,7 @@ import { getEmployeeList, delEmployee } from "@/api/employees";
 // 引入员工的枚举对象
 import EmployeeEnum from "@/api/constant/employees";
 import addEmployee from './components/add-employee.vue'
+import AssignRole from './components/assign-role.vue'
 export default {
   data() {
     return {
@@ -75,11 +78,13 @@ export default {
         total: 0,
       },
       loading: false, // 显示遮罩层
-      showDialog:false
+      showDialog:false,
+      showRoleDialog:false, // 显示分配角色的弹层
+      userId:null, // 定义一个userId
     };
   },
   components: {
-    addEmployee
+    addEmployee,AssignRole
   },
   created() {
     this.getEmployeeList();
