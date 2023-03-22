@@ -28,7 +28,9 @@
           style="width: 50%"
           placeholder="请选择"
           v-model="formData.formOfEmployment"
-        />
+        >
+            <el-option v-for="item in EmployeeEnum.hireType"></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
         <el-input
@@ -45,7 +47,7 @@
           @focus="getDepartments"
         />
         <!-- 放置一个树形组件 -->
-        <el-tree v-loading="loading" v-if="showTree" :data="treeData" :props="{ label:'name' }" default-expand-all />
+        <el-tree v-loading="loading" v-if="showTree" :data="treeData" :props="{ label:'name' }" default-expand-all @node-click="selectNode" />
       </el-form-item>
       <el-form-item label="转正时间" prop="correctionTime">
         <el-date-picker
@@ -70,6 +72,9 @@
 <script>
 import {getDepartments} from '@/api/departments'
 import {tranListToTreeData} from '@/utils/index'
+// 引入员工的枚举对象
+// 组件模板中的数据只能来源于data、props和计算属性
+import EmployeeEnum from "@/api/constant/employees";
 export default {
   props: {
     showDialog: {
@@ -119,7 +124,8 @@ export default {
       },
       treeData:[],
       showTree:false,// 默认不显示树形组件
-      loading:false // 加上进度条
+      loading:false, // 加上进度条
+      EmployeeEnum
     };
   },
   methods: {
@@ -130,6 +136,10 @@ export default {
        // 将depts转化为树形
        this.treeData =  tranListToTreeData(depts,'')
        this.loading = false
+    },
+    selectNode(node){
+        this.formData.departmentName = node.name
+        this.showTree = false
     }
   }
 };
