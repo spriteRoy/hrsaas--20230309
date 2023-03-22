@@ -18,18 +18,29 @@
             label="聘用形式"
             sortable=""
             prop="formOfEmployment"
+            :formatter="formatEmployment"
           />
           <el-table-column label="部门" sortable="" prop="departmentName" />
-          <el-table-column label="入职时间" sortable="" prop="timeOfEntry" />
-          <el-table-column label="账户状态" sortable="" prop="enableState" />
+          <el-table-column label="入职时间" sortable="">
+            <template v-slot="scope">
+              {{ scope.row.timeOfEntry | formatDate }}
+            </template>
+          </el-table-column>
+          <el-table-column label="账户状态" sortable="">
+            <template v-slot="{ row }">
+              <el-switch :value="row.enableState === 1 + ''" />
+            </template>
+          </el-table-column>
           <el-table-column label="操作" sortable="" fixed="right" width="280">
-            <template>
+            <template v-slot="{ row }">
               <el-button type="text" size="small">查看</el-button>
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
               <el-button type="text" size="small">角色</el-button>
-              <el-button type="text" size="small">删除</el-button>
+              <el-button type="text" size="small" @click="delEmployee(row.id)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -49,7 +60,9 @@
 </template>
 
 <script>
-import { getEmployeeList } from "@/api/employees";
+import { getEmployeeList, delEmployee } from "@/api/employees";
+// 引入员工的枚举对象
+import EmployeeEnum from "@/api/constant/employees";
 export default {
   data() {
     return {
@@ -76,6 +89,22 @@ export default {
     changePage(newPage) {
       this.page.page = newPage;
       this.getEmployeeList();
+    },
+    // 格式化聘用形式
+    formatEmployment(row, column, cellValue, index) {
+      // 要去找 1所对应的值
+      const obj = EmployeeEnum.hireType.find((item) => item.id === cellValue);
+      return obj ? obj.value : "未知";
+    },
+    async delEmployee(id) {
+      try {
+        await this.$confirm("您确定删除该员工吗");
+        await delEmployee(id);
+        this.getEmployeeList();
+        this.$message.success("删除员工成功");
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };
