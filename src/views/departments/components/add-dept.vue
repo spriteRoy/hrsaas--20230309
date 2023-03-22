@@ -235,8 +235,6 @@ export default {
         introduce: "",
       };
       // delete this.formData.id
-      console.log("this.formData.id");
-      console.log(this.formData.id);
       this.$emit("update:showDialog", false); //触发事件
       // 对整个表单进行重置，将所有字段值重置为初始值并移除校验结果
       this.$refs.deptForm.resetFields(); // 重置校验字段

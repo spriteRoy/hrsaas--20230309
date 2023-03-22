@@ -1,7 +1,7 @@
 <template>
-  <el-dialog title="新增员工" :visible="showDialog">
+  <el-dialog title="新增员工" :visible="showDialog" @close="btnCancel">
     <!-- 表单 -->
-    <el-form :model="formData" :rules="rules" label-width="120px">
+    <el-form ref="addEmployee" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="姓名" prop="username">
         <el-input
           style="width: 50%"
@@ -29,7 +29,7 @@
           placeholder="请选择"
           v-model="formData.formOfEmployment"
         >
-            <el-option v-for="item in EmployeeEnum.hireType"></el-option>
+            <el-option v-for="item in EmployeeEnum.hireType" :key="item.id" :label="item.value" :value="item.id"/>
         </el-select>
       </el-form-item>
       <el-form-item label="工号" prop="workNumber">
@@ -61,8 +61,8 @@
     <template v-slot:footer>
       <el-row type="flex" justify="center">
         <el-col :span="6">
-          <el-button size="small">取消</el-button>
-          <el-button type="primary" size="small">确定</el-button>
+          <el-button size="small"  @click="btnCancel">取消</el-button>
+          <el-button type="primary" size="small" @click="btnOK">确定</el-button>
         </el-col>
       </el-row>
     </template>
@@ -72,6 +72,7 @@
 <script>
 import {getDepartments} from '@/api/departments'
 import {tranListToTreeData} from '@/utils/index'
+import {addEmployee} from '@/api/employees'
 // 引入员工的枚举对象
 // 组件模板中的数据只能来源于data、props和计算属性
 import EmployeeEnum from "@/api/constant/employees";
@@ -140,6 +141,32 @@ export default {
     selectNode(node){
         this.formData.departmentName = node.name
         this.showTree = false
+    },
+    async btnOK(){
+      try {
+        await this.$refs.addEmployee.validate()
+        await addEmployee(this.formData) // 调用新增接口
+        // this.$parent:父组件实例
+        this.$parent.getEmployeeList && this.$parent.getEmployeeList()
+        this.$parent.showDialog = false
+        // 这里不用写重置，因为关闭弹层，触发了close事件
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    btnCancel(){
+      this.formData = {
+        username: "",
+        mobile: "",
+        formOfEmployment: "",
+        workNumber: "",
+        departmentName: "",
+        timeOfEntry: "",
+        correctionTime: "",
+      }
+      this.$refs.addEmployee.resetFields() 
+      // update:props名称 这么写的话 可以在父组件 直接用sync修饰符处理
+      this.$emit('update:showDialog',false)
     }
   }
 };

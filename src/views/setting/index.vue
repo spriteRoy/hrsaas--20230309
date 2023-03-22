@@ -120,6 +120,7 @@
     </div>
     <!-- 放置编辑弹层 -->
     <el-dialog :title="showTitle" :visible="showDialog" @close="btnCancel">
+      this.roleForm.id:{{ this.roleForm.id }}
       <el-form
         ref="roleForm"
         :model="roleForm"
@@ -141,7 +142,6 @@
         </el-col>
       </el-row>
     </el-dialog>
-    {{ obj }}  ---{{ showObj }}
   </div>
 </template>
 
@@ -156,15 +156,23 @@ import {
 } from "@/api/setting";
 import { mapGetters } from "vuex";
 export default {
+  // 计算属性
   computed: {
     ...mapGetters(["companyId"]),
-    showTitle() {
-      console.log("计算属性------------"+this.roleForm.id);
-      return this.roleForm.id ? "编辑角色" : "新增角色";
-    },
-    showObj(){
-      return this.obj ? 'obj不为空' : 'obj为空'
+
+    // showTitle() {
+    //   console.log('计算属性被执行了');
+    //   return this.roleForm.id ? "编辑角色" : "新增角色";
+    // },
+    showTitle:{
+      // 禁用计算属性的缓存
+      // cache: false,
+      get(){
+        // return this.roleForm.id ? "编辑角色" : "新增角色";
+        return this.roleForm.id===undefined ? "新增角色" : "编辑角色";
+      }
     }
+
   },
   data() {
     return {
@@ -184,22 +192,16 @@ export default {
           // { required: true, message: "角色名称不能为空", trigger: "blur" },
         ],
       },
-      obj:null
     };
   },
   created() {
-    this.obj = {
-      a:1
-    }
-    this.obj.b = 2
-    delete this.obj.a
     this.getRoleList();
     this.getCompanyInfo(this.companyId);
   },
   methods: {
     add(){
+      console.log('add - this.roleForm.id:'+this.roleForm.id);
       this.showDialog = true
-      console.log("this.roleForm.id:"+this.roleForm.id);
     },
     async getRoleList() {
       const { total, rows } = await getRoleList(this.page);
@@ -222,17 +224,14 @@ export default {
         })
         .then(() => {
           // this.$modal.msgSuccess(`${row.name}删除成功`)
-          console.log("删除成功");
           this.getRoleList();
         });
     },
     async editRole(id) {
+      console.log('edit - 赋值前this.roleForm.id:'+this.roleForm.id);
       // roleForm对象与表单双向绑定  而不是formData
-      console.log("编辑时 获取数据前 this.roleForm.id:"+this.roleForm.id);
-      console.log(this.roleForm);
       this.roleForm = await getRoleDetail(id); // 实现数据回写
-      console.log("编辑时 获取数据后 this.roleForm.id:"+this.roleForm.id);
-      console.log(this.roleForm);
+      console.log('edit - 赋值后this.roleForm.id:'+this.roleForm.id);
       this.showDialog = true; // 为了不出现闪烁的问题 先获取数据 再弹出层
     },
     async btnOK() {
@@ -256,11 +255,18 @@ export default {
     },
     btnCancel() {
       // 重置数据，因为resetFields只能重置表单上的数据，非表单上的数据，比如编辑中的id不能重置
-      this.roleForm = {
-        name: "",
-        description: "",
-      };
-      // delete this.roleForm.id
+      // this.roleForm = {
+      //   name: "",
+      //   description: "",
+      // };
+      console.log();
+      this.roleForm.id = undefined
+      let a = this.roleForm.id
+      console.log('a:'+a);
+      delete this.roleForm.id
+      let b = this.roleForm.id
+      console.log('b:'+b);
+      console.log("a===b:"+a===b);
       // 移除校验
       // resetFields只能重置表单上的数据
       this.$refs.roleForm.resetFields();
