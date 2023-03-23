@@ -124,6 +124,9 @@ export default {
       this.userId = id // prop传值是异步的
       await this.$refs.assignRole.getUserDetailById(id) // 调用子组件方法
       this.showRoleDialog = true
+
+      console.log('父组件打印roleIds：');
+      console.log(this.$refs.assignRole.roleIds);
     }
   },
 };
