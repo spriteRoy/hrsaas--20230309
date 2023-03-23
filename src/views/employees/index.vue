@@ -37,7 +37,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small" >角色</el-button>
+              <el-button type="text" size="small" @click="editRole(row.id)" >角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)"
                 >删除</el-button
               >
@@ -58,12 +58,13 @@
     </div>
     <addEmployee :showDialog.sync="showDialog"></addEmployee>
     <!-- 放置分配角色组件 -->
-    <AssignRole :showRoleDialog.sync="showRoleDialog" :userId="userId"></AssignRole>
+    <AssignRole ref="assignRole" :showRoleDialog.sync="showRoleDialog" :userId="userId"></AssignRole>
   </div>
 </template>
 
 <script>
 import { getEmployeeList, delEmployee } from "@/api/employees";
+
 // 引入员工的枚举对象
 import EmployeeEnum from "@/api/constant/employees";
 import addEmployee from './components/add-employee.vue'
@@ -80,7 +81,7 @@ export default {
       loading: false, // 显示遮罩层
       showDialog:false,
       showRoleDialog:false, // 显示分配角色的弹层
-      userId:null, // 定义一个userId
+      userId:null, // 定义一个userId,传给子组件
     };
   },
   components: {
@@ -88,6 +89,7 @@ export default {
   },
   created() {
     this.getEmployeeList();
+
   },
   methods: {
     async getEmployeeList() {
@@ -117,6 +119,12 @@ export default {
         console.log(error);
       }
     },
+    async editRole(id){
+      
+      this.userId = id // prop传值是异步的
+      await this.$refs.assignRole.getUserDetailById(id) // 调用子组件方法
+      this.showRoleDialog = true
+    }
   },
 };
 </script>

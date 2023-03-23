@@ -10,6 +10,11 @@
         </td>
       </tr>
     </div>
+
+    <!-- {{obj.a}} -->
+    <!-- <input type="text" v-bind:value="obj.a" @input="ipt"> -->
+    <input type="text" v-model="obj.a">
+    <button @click="btn">按钮</button>
   </div>
 </template>
 
@@ -27,8 +32,22 @@ export default {
       return Date.now();
     },
   },
+  methods:{
+    ipt(e){
+      // console.log(e);
+       this.obj.a = e.data
+    },
+    btn(){
+      // console.log(this.obj.a);
+      this.obj.a = 1
+      // this.$set(this.obj,'a',22)
+      // delete this.obj.a
+      // this.obj.a = undefined
+    }
+  },
   data() {
     return {
+      obj:{},
       arr: [88, 90, 100, 20, 50],
       users: [
         // Duplicate keys detected: '3'. This may cause an update error

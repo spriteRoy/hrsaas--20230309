@@ -2,6 +2,8 @@
   <div class="dashboard-container">
     <div class="app-container">
       <el-card>
+        <!-- <button @click="btn">点击</button> -->
+        {{ obj.a }}
         <el-tabs>
           <el-tab-pane label="角色管理">
             <el-row style="backgroundcolor: pink; height: 60px" align="middle">
@@ -176,6 +178,7 @@ export default {
   },
   data() {
     return {
+      obj:{},
       list: [], // 承接数组
       page: {
         // 放置页码及相关数据
@@ -194,11 +197,19 @@ export default {
       },
     };
   },
+  mounted () {
+    this.obj.a = 3
+    this.obj.c = 5
+  },
   created() {
+    this.obj.b = 4
     this.getRoleList();
     this.getCompanyInfo(this.companyId);
   },
   methods: {
+    // btn(){
+    //   this.obj.a = 1
+    // },
     add(){
       console.log('add - this.roleForm.id:'+this.roleForm.id);
       this.showDialog = true
@@ -255,18 +266,21 @@ export default {
     },
     btnCancel() {
       // 重置数据，因为resetFields只能重置表单上的数据，非表单上的数据，比如编辑中的id不能重置
-      // this.roleForm = {
-      //   name: "",
-      //   description: "",
-      // };
+      this.roleForm = {
+        name: "",
+        description: "",
+      };
       console.log();
       this.roleForm.id = undefined
       let a = this.roleForm.id
       console.log('a:'+a);
-      delete this.roleForm.id
+      // delete删除属性，vue监听不到
+      // delete this.roleForm.id
       let b = this.roleForm.id
       console.log('b:'+b);
-      console.log("a===b:"+a===b);
+      // console.log("a===b:"+a===b);
+      console.log("a===b:");
+      console.log(a===b);
       // 移除校验
       // resetFields只能重置表单上的数据
       this.$refs.roleForm.resetFields();
