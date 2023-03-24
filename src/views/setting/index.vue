@@ -145,14 +145,14 @@
       </el-row>
     </el-dialog>
     <!-- 放置分配权限的弹层 -->
-    <el-dialog title="分配权限" :visible="showPermDialog">
+    <el-dialog title="分配权限" :visible="showPermDialog" @close="btnPermCancel">
       <!-- 
         check-strictly如果为true，表示父子勾选时，不互相关联
         如果为false，表示父子勾选时，互相关联
        -->
        <!-- default-checked-keys：默认勾选的节点的key的数组 -->
        <!-- node-key:每个树节点用来作为唯一标识的属性，整棵树应该是唯一的 -->
-      <el-tree :data="permData" :props="defaultProps" :show-checkbox="true" default-expand-all :check-strictly="true" :default-checked-keys="selectCheck" node-key="id"	/>
+      <el-tree ref="permTree" :data="permData" :props="defaultProps" :show-checkbox="true" default-expand-all :check-strictly="true" :default-checked-keys="selectCheck" node-key="id"	/>
        <!-- 确定 取消 -->
       <el-row slot="footer" type="flex" justify="center">
         <el-col :span="6">
@@ -172,6 +172,7 @@ import {
   getRoleDetail,
   updateRole,
   addRole,
+  assignPerm
 } from "@/api/setting";
 import {getPermissionList} from '@/api/permission'
 import { tranListToTreeData } from "@/utils/index";
@@ -326,11 +327,15 @@ export default {
       this.selectCheck = permIds
       this.showPermDialog = true
     },
-    btnPermOK(){
-
+    async btnPermOK(){
+      const permIds = this.$refs.permTree.getCheckedKeys()
+      await assignPerm({permIds,id:this.roleId})
+      this.$message.success('分配权限成功')
+      this.showPermDialog = false
     },
     btnPermCancel(){
-
+      this.selectCheck = [] // 重置数据
+      this.showPermDialog = false
     }
   },
 };
