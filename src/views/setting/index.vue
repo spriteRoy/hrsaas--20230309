@@ -42,7 +42,7 @@
               <el-table-column label="描述" prop="description" />
               <el-table-column label="操作">
                 <template slot-scope="{ row }">
-                  <el-button type="success">分配权限</el-button>
+                  <el-button type="success" @click="assignPerm(row.id)">分配权限</el-button>
                   <el-button type="primary" @click="editRole(row.id)"
                     >编辑</el-button
                   >
@@ -144,6 +144,17 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <!-- 放置分配权限的弹层 -->
+    <el-dialog title="分配权限" :visible="showPermDialog">
+      <el-tree :data="permData" :props="defaultProps" />
+       <!-- 确定 取消 -->
+      <el-row slot="footer" type="flex" justify="center">
+        <el-col :span="6">
+          <el-button type="primary" size="small" @click="btnPermOK">确定</el-button>
+          <el-button size="small" @click="btnPermCancel">取消</el-button>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 
@@ -156,6 +167,8 @@ import {
   updateRole,
   addRole,
 } from "@/api/setting";
+import {getPermissionList} from '@/api/permission'
+import { tranListToTreeData } from "@/utils/index";
 import { mapGetters } from "vuex";
 export default {
   // 计算属性
@@ -195,6 +208,11 @@ export default {
           // { required: true, message: "角色名称不能为空", trigger: "blur" },
         ],
       },
+      showPermDialog:false,
+      permData:[], // 接受权限数据
+      defaultProps: {
+        label: 'name'
+      }, // 定义显示字段的名称 和 子属性的字段名称
     };
   },
   mounted () {
@@ -288,6 +306,17 @@ export default {
       console.log(this.roleForm);
       this.showDialog = false;
     },
+
+    // 获取权限点数据
+    async assignPerm(id){
+      let result = await getPermissionList() // 获取所有权限点
+      this.permData = tranListToTreeData(result,'0') // 转化list到树形数据
+      this.showPermDialog = true
+    },
+    btnPermOK(){
+
+    },
+    btnPermCancel(){}
   },
 };
 </script>
