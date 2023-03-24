@@ -146,7 +146,13 @@
     </el-dialog>
     <!-- 放置分配权限的弹层 -->
     <el-dialog title="分配权限" :visible="showPermDialog">
-      <el-tree :data="permData" :props="defaultProps" />
+      <!-- 
+        check-strictly如果为true，表示父子勾选时，不互相关联
+        如果为false，表示父子勾选时，互相关联
+       -->
+       <!-- default-checked-keys：默认勾选的节点的key的数组 -->
+       <!-- node-key:每个树节点用来作为唯一标识的属性，整棵树应该是唯一的 -->
+      <el-tree :data="permData" :props="defaultProps" :show-checkbox="true" default-expand-all :check-strictly="true" :default-checked-keys="selectCheck" node-key="id"	/>
        <!-- 确定 取消 -->
       <el-row slot="footer" type="flex" justify="center">
         <el-col :span="6">
@@ -213,6 +219,8 @@ export default {
       defaultProps: {
         label: 'name'
       }, // 定义显示字段的名称 和 子属性的字段名称
+      roleId:null, // 用来记录当前分配权限的id
+      selectCheck:[], // 用来记录当前权限点的标识
     };
   },
   mounted () {
@@ -311,12 +319,19 @@ export default {
     async assignPerm(id){
       let result = await getPermissionList() // 获取所有权限点
       this.permData = tranListToTreeData(result,'0') // 转化list到树形数据
+      // 有id就可以
+      this.roleId = id
+      // 获取当前id所拥有的权限点
+      const {permIds} = await getRoleDetail(id) // permIds为当前角色拥有的权限点数据
+      this.selectCheck = permIds
       this.showPermDialog = true
     },
     btnPermOK(){
 
     },
-    btnPermCancel(){}
+    btnPermCancel(){
+
+    }
   },
 };
 </script>
