@@ -37,7 +37,7 @@ const actions = {
     const baseInfo = await getUserDetailById(result.userId)
     const baseResult = {...result,...baseInfo}
     context.commit('setUserInfo',baseResult)
-    // 问题：这里为什么要返回 为后面埋下伏笔
+    // 问题：这里为什么要return呢? 为后期做权限埋下伏笔
     return result
   },
   // 登出操作

@@ -328,6 +328,8 @@ export default {
       this.showPermDialog = true
     },
     async btnPermOK(){
+      // getCheckedKeys:
+      //      若节点可被选择（即 show-checkbox 为 true），则返回目前被选中的节点的 key 所组成的数组
       const permIds = this.$refs.permTree.getCheckedKeys()
       await assignPerm({permIds,id:this.roleId})
       this.$message.success('分配权限成功')
