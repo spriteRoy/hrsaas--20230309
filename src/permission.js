@@ -30,7 +30,8 @@ router.beforeEach(async (to,from,next) => {
                 // routesz就是筛选得到的动态路由
                 const routes = await store.dispatch('permission/filterRoutes',roles.menus)
                 // 动态路由添加到路由表中
-                router.addRoutes(routes) // 添加动态路由到路由表
+                // 将404页面放到整个路由表的最后
+                router.addRoutes([...routes,{ path: '*', redirect: '/404', hidden: true }]) // 添加动态路由到路由表
                 // 添加完动态路由之后
                 next(to.path) // 相当于跳到对应的地址，相当于多做一次跳转，为什么要多做一次跳转呢？
                 // 进门了，但是进门之后我要去的地方的路还没有铺好，直接走，掉坑里，多做一次跳转，再从门外往里进一次，跳转之前 把路铺好，再次进来的时候，路就铺好了

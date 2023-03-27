@@ -1,5 +1,6 @@
 import { getToken, setToken, removeToken,setTimeStamp,getTimeStamp } from '@/utils/auth'
 import { login,getUserInfo,getUserDetailById } from '@/api/user'
+import {resetRouter} from '@/router'
 const state = {
   token:getToken(),
   // 问题：这里为什么定义空对象，为什么不定义null
@@ -44,6 +45,14 @@ const actions = {
   logout(context){
     context.commit('removeToken')
     context.commit('removeUserInfo')
+    resetRouter() // 重置路由
+    // 去设置权限模块下路由为初始状态
+    // Vuex子模块怎么调用子模块的action 都没加锁的情况下 可以随意调用
+    // 不加命名空间的情况下的 所有的mutations和action都是挂在全局上的 所以可以直接调用
+    // 但是加了命名空间的子模块 怎么调用另一个加了命名空间的子模块的mutations
+    // 加了命名空间的context指的不是全局的context
+    // mutations名称 载荷 payload 第三个参数  { root: true } 调用根级的mutations或者action
+    context.commit('permission/setRoutes', [], { root: true })
   }
 }
 
