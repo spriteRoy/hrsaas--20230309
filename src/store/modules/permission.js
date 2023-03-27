@@ -2,6 +2,7 @@
 import {constantRoutes,asyncRoutes} from '@/router' 
 
 const state = {
+  // layout -> components -> Sidebar -> index.vue文件中，通过mapGetters引用了routes变量
   routes:constantRoutes, // 路由表，表示当前用户所拥有的所有路由的数组
 }
 const mutations = {

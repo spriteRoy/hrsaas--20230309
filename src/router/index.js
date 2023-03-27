@@ -64,7 +64,8 @@ export const constantRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: [...constantRoutes, ...asyncRoutes] // 临时合并所有的路由
+  // routes: [...constantRoutes, ...asyncRoutes] // 临时合并所有的路由
+  routes: [...constantRoutes] // 临时合并所有的路由
 })
 
 const router = createRouter()

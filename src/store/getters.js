@@ -7,6 +7,7 @@ const getters = {
   staffPhoto:state => state.user.userInfo.staffPhoto,
   // userInfo不能定义为null，如果定义为null，null.companyId会报错
   companyId:state => state.user.userInfo.companyId,
+  routes:state => state.permission.routes,
   
 }
 export default getters
